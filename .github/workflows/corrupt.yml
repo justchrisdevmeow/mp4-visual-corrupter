@@ -11,14 +11,14 @@ on:
         required: true
         type: string
       pattern:
-        description: 'Glitch pattern (random, bitflip, shift, duplicate, block, rainbow, all)'
+        description: 'Glitch pattern (random, bitflip, shift, duplicate, block, rainbow, all, custom:pattern1,pattern2)'
         required: false
-        default: 'random'
+        default: 'custom:block,duplicate'
         type: string
       intensity:
-        description: 'Intensity (0.001 to 0.05)'
+        description: 'Intensity (1-50, default 5)'
         required: false
-        default: '0.005'
+        default: '5'
         type: string
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
           else
             for f in *.mp4; do
               if [ -f "$f" ]; then
-                python main.py "$f" "glitched_$f" random 0.005
+                python main.py "$f" "glitched_$f" "custom:block,duplicate" 5
                 break
               fi
             done
