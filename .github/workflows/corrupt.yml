@@ -1,0 +1,52 @@
+name: Glitch MP4
+
+on:
+  push:
+    paths:
+      - '*.mp4'
+  workflow_dispatch:
+    inputs:
+      video_file:
+        description: 'Video filename (e.g., video.mp4)'
+        required: true
+        type: string
+      pattern:
+        description: 'Glitch pattern (random, bitflip, shift, duplicate, block, rainbow, all)'
+        required: false
+        default: 'random'
+        type: string
+      intensity:
+        description: 'Intensity (0.001 to 0.05)'
+        required: false
+        default: '0.005'
+        type: string
+
+jobs:
+  glitch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Run glitch
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python main.py "${{ inputs.video_file }}" "glitched_${{ inputs.video_file }}" "${{ inputs.pattern }}" "${{ inputs.intensity }}"
+          else
+            for f in *.mp4; do
+              if [ -f "$f" ]; then
+                python main.py "$f" "glitched_$f" random 0.005
+                break
+              fi
+            done
+          fi
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: glitched-video
+          path: glitched_*.mp4
