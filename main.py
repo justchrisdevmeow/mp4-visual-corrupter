@@ -176,7 +176,7 @@ def glitch_distort(data, skip_header, moov_region):
             data[i] = (data[i] + random.randint(-30, 30)) % 256
     return data
 
-def glitch_glitch_mp4(input_file, output_file, pattern="random", intensity=0.005):
+def glitch_mp4(input_file, output_file, pattern="random", intensity=0.005):
     with open(input_file, 'rb') as f:
         data = bytearray(f.read())
     
